@@ -1,0 +1,60 @@
+local left_arm
+local right_arm
+local torso
+local head
+
+local newtorso
+local m6d
+
+local sizes = {
+	["Head"] = Vector3.new(2,1,1);
+	["Torso"] = Vector3.new(2,2,1);
+	["HumanoidRootPart"] = Vector3.new(2,2,1);
+	["Right Arm"] = Vector3.new(1,2,1);
+	["Left Arm"] = Vector3.new(1,2,1);
+	["Left Leg"] = Vector3.new(1,2,1);
+	["Right Leg"] = Vector3.new(1,2,1);
+}
+
+script.sendout.OnServerEvent:Connect(function(player,data,scale)
+	if player.Character == script.Parent then
+		if data == "init" then
+			player.Backpack.Arms:Destroy()
+			left_arm = player.Character:FindFirstChild("Left Arm")
+			right_arm = player.Character:FindFirstChild("Right Arm")
+			torso = player.Character:FindFirstChild("Torso")
+			head = player.Character:FindFirstChild("Head")
+
+			torso["Right Shoulder"].Enabled = false
+			torso["Left Shoulder"].Enabled = false
+			torso["Neck"].Enabled = false
+
+			left_arm.Anchored = true
+			right_arm.Anchored = true
+			head.Anchored = true
+
+			left_arm.CanCollide = false
+			right_arm.CanCollide = false
+			head.CanCollide = false
+
+			player.Character:ScaleTo(scale)
+			
+			torso.Transparency = 1
+			newtorso = workspace.oaky
+			--newtorso.Size = torso.Size
+			--m6d = Instance.new("Motor6D")
+			--m6d.Parent = newtorso
+			--m6d.Part0 = newtorso
+			--m6d.Part1 = torso
+			--newtorso.Anchored = false
+		else
+			
+			--m6d.C0 = CFrame.new(torso.Position,head.Position):ToObjectSpace(torso.CFrame) * CFrame.Angles(math.rad(90),0,0)
+			newtorso.CFrame = CFrame.new(torso.Position,data["headCF"].Position)
+			newtorso["LineHandleAdornment"].Length = (torso.Position - head.Position).Magnitude
+			left_arm.CFrame = data["leftarmCF"]
+			right_arm.CFrame = data["rightarmCF"]
+			head.CFrame = data["headCF"]
+		end
+	end
+end)
